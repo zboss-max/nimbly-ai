@@ -1,11 +1,14 @@
+"""
+main路由
+"""
 from flask_restful import Api, Resource
 
-from . import main
+from . import main_bp
 
-main_api = Api(main)
+main_api = Api(main_bp)
 
 
-class MainResource(Resource):
+class IndexResource(Resource):
     def get(self):
         pass
 
@@ -13,4 +16,4 @@ class MainResource(Resource):
         pass
 
 
-main_api.add_resource(MainResource, '/')
+main_api.add_resource(IndexResource, '/')

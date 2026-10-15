@@ -3,7 +3,7 @@
 """
 from flask import Blueprint
 
-main = Blueprint('main', __name__, url_prefix='/')
+main_bp = Blueprint('main', __name__)
 
 # 导入路由和视图函数
 from . import routes
