@@ -1,0 +1,32 @@
+"""
+配置
+"""
+KEY = 'TfnJh3MZ_ixi2h1SwpFzcQ'
+SQL_URL = 'mysql+pymysql://root:root@localhost:3306/my_utils?charset=utf8mb4'
+
+
+class Config:
+    """配置"""
+    # 连接数据库
+    SQLALCHEMY_DATABASE_URI = SQL_URL
+    # 修改追踪
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # 加密密钥
+    SECRET_KEY = KEY
+
+
+class DevelopmentConfig(Config):
+    """开发配置"""
+    # 开发模式
+    DEBUG = True
+
+
+class ProductionConfig(Config):
+    """生产配置"""
+    DEBUG = False
+
+
+app_config = {
+    'd': DevelopmentConfig,
+    'p': ProductionConfig,
+}
