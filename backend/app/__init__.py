@@ -5,7 +5,6 @@ from flask import Flask
 
 from config import app_config
 from app.extensions import db
-from app import models
 
 
 def create_app(config_name):
@@ -17,9 +16,15 @@ def create_app(config_name):
     # 初始化数据库
     db.init_app(app)
 
-    # 在all_blueprints中集中管理
-    from app.blueprints import all_blueprints
-    for bp, prefix in all_blueprints:
-        app.register_blueprint(bp, url_prefix=prefix)
+    # 导入共享模型
+    from app import models
+
+    # 导入版本
+    from app.api import get_registry
+    registry = get_registry()
+
+    # 配置控制版本
+    for version in app.config["API_VERSIONS"]:
+        app.register_blueprint(registry[version]())
 
     return app

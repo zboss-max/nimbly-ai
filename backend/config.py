@@ -20,10 +20,14 @@ class DevelopmentConfig(Config):
     # 开发模式
     DEBUG = True
 
+    API_VERSIONS = ('v1',)
+
 
 class ProductionConfig(Config):
     """生产配置"""
     DEBUG = False
+
+    API_VERSIONS = ('v1',)
 
 
 app_config = {
