@@ -8,6 +8,7 @@ class Index(Resource):
     """
     登录
     """
+
     def get(self):
         pass
 

@@ -5,6 +5,7 @@ class SignIn(Resource):
     """
     登录
     """
+
     def get(self):
         pass
 
