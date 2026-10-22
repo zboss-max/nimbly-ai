@@ -5,6 +5,7 @@ from flask import Flask
 
 from config import app_config
 from app.extensions import db
+from app.common.errors import register_error_handlers
 
 
 def create_app(config_name):
@@ -15,6 +16,8 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     # 初始化数据库
     db.init_app(app)
+    register_error_handlers(app)
+
 
     # 导入共享模型
     from app import models

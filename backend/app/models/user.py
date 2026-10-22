@@ -48,3 +48,14 @@ class User(BaseModel, db.Model):
 
     def set_password(self, pwd):
         self.password = generate_password_hash(pwd)  # 生成哈希值
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'phone': self.phone,
+            'email': self.email,
+            'create_time': self.create_time.strftime('%Y-%m-%d %H:%M:%S')
+                            if self.create_time else None,
+        }
+
