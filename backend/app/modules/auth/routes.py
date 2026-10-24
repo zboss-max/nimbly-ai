@@ -14,7 +14,5 @@ def create_auth_bp() -> Blueprint:
 
     api.add_resource(SignIn, "/signin")
     api.add_resource(SignUp, "/signup")
-
-    # 测试用
     api.add_resource(Me, "/me")
     return bp

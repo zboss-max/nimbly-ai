@@ -18,6 +18,9 @@ def create_app(config_name):
     # 初始化jwt
     jwt.init_app(app)
 
+    # 注册 JWT 错误回调
+    from app.common.jwt_callbacks import register_jwt_callbacks
+    register_jwt_callbacks(jwt)
 
     # 导入共享模型
     from app import models

@@ -16,9 +16,12 @@ class Config:
     # 加密密钥
     SECRET_KEY = KEY
 
+    # 让 flask_restful 把非 HTTP 异常交还给 Flask 的错误处理链
+    PROPAGATE_EXCEPTIONS = True
+
     # JWT
     JWT_SECRET_KEY = KEY  # 签名密钥
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)  # token 有效期
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # token 有效期
 
 
 class DevelopmentConfig(Config):
