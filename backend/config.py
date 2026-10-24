@@ -1,6 +1,8 @@
 """
 配置
 """
+from datetime import timedelta
+
 KEY = 'TfnJh3MZ_ixi2h1SwpFzcQ'
 SQL_URL = 'mysql+pymysql://root:zboss@localhost:3306/nimbly_ai?charset=utf8mb4'
 
@@ -13,6 +15,10 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # 加密密钥
     SECRET_KEY = KEY
+
+    # JWT
+    JWT_SECRET_KEY = KEY  # 签名密钥
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)  # token 有效期
 
 
 class DevelopmentConfig(Config):

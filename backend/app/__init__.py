@@ -4,8 +4,7 @@
 from flask import Flask
 
 from config import app_config
-from app.extensions import db
-from app.common.errors import register_error_handlers
+from app.extensions import db, jwt
 
 
 def create_app(config_name):
@@ -16,11 +15,16 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     # 初始化数据库
     db.init_app(app)
-    register_error_handlers(app)
+    # 初始化jwt
+    jwt.init_app(app)
 
 
     # 导入共享模型
     from app import models
+
+    # 注册全局错误处理
+    from app.common.errors import register_error_handlers
+    register_error_handlers(app)
 
     # 导入版本
     from app.api import get_registry
