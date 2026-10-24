@@ -4,7 +4,6 @@ from flask_restful import Api
 from app.modules.auth.resources import (
     SignIn,
     SignUp,
-    Me,
 )
 
 
@@ -14,5 +13,5 @@ def create_auth_bp() -> Blueprint:
 
     api.add_resource(SignIn, "/signin")
     api.add_resource(SignUp, "/signup")
-    api.add_resource(Me, "/me")
+
     return bp

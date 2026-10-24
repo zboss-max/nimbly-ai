@@ -1,9 +1,6 @@
-import re
 from dataclasses import dataclass
 
-PHONE_PATTERN = re.compile(r'^1\d{10}$')
-EMAIL_PATTERN = re.compile(r'^[\w.+-]+@[\w-]+(\.[\w-]+)+$')
-USERNAME_PATTERN = re.compile(r'^[a-zA-Z0-9]{8,16}$')
+from app.models.user import PHONE_PATTERN, EMAIL_PATTERN, USERNAME_PATTERN
 
 
 @dataclass

@@ -2,13 +2,12 @@
 文件功能：HTTP 适配层
 职责：只做 HTTP 与 Python 之间的翻译——校验 → 调业务 → 组装响应，不写任何业务规则。
 """
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token
 from flask_restful import Resource
 
 from app.modules.auth.schemas import SignInSchema, SignUpSchema
 from app.modules.auth.services import AuthService
 from app.common.responses import parse_json, fail, ok
-from app.models.user import User
 
 
 class SignIn(Resource):
@@ -26,7 +25,7 @@ class SignIn(Resource):
             return fail(msg, 401)
 
         # 响应
-        token = create_access_token(identity=str(user.id))
+        token = create_access_token(identity=str(user.id))  # 创建token，访问令牌
         return ok({'access_token': token, 'user': user.to_dict()}, '登录成功')
 
 
@@ -46,14 +45,3 @@ class SignUp(Resource):
 
         # 响应
         return ok(user.to_dict(), '注册成功', 201)
-
-
-class Me(Resource):
-    """当前登录用户"""
-
-    @jwt_required()
-    def get(self):
-        user = User.get_by_id(int(get_jwt_identity()))
-        if user is None:
-            return fail('用户不存在', 401)
-        return ok(user.to_dict())
