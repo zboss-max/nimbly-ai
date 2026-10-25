@@ -1,0 +1,41 @@
+# ---------- 系统 / 通用 ----------
+.DS_Store
+Thumbs.db
+*.log
+
+# ---------- 编辑器 / IDE ----------
+# .idea/.gitignore 本身也一并忽略，属于 IDE 自动生成物
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.iml
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---------- 密钥 / 环境变量 ----------
+# .env 存真实配置，绝不入库；.env.example 是模板，必须入库
+.env
+.env.*
+!.env.example
+
+# ---------- 本地工具目录 ----------
+# AI 助手的工作区数据，属于本机产物，不作为项目源码管理
+.workbuddy/
+
+# ---------- 本地数据库 ----------
+*.db
+*.sqlite3
+
+# ---------- 前端兜底（frontend/.gitignore 已覆盖，此处防根目录误放） ----------
+node_modules/
+dist/
+*.local

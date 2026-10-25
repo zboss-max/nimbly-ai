@@ -1,0 +1,18 @@
+# 全仓库统一：文本文件入库一律 LF
+# Windows 的 core.autocrlf 会让每个文件都带 CRLF 警告，并且 mac/Linux 同事
+# 打开文件时可能看到整文件 diff。这里显式固定，团队内换行符不再有歧义。
+* text=auto eol=lf
+
+# 二进制文件，禁止 git 做换行转换或文本 diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+
+# Windows 批处理脚本必须保留 CRLF，否则 cmd 解析出错
+*.bat text eol=crlf
+*.cmd text eol=crlf
