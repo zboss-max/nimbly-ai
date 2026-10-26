@@ -173,4 +173,73 @@ return fail('账号或密码错误', 401)    # 401
 - 禁止 `models` 反向 import `services`
 - 禁止裸 `return {...}`，必须走 `ok/fail`
 - 禁止把密码、token 明文写进日志
-- 禁止在代码里硬编码密钥与数据库连接串（迁移到环境变量，当前 `config.py` 的明文配置属于待办）
+- 禁止在代码里硬编码密钥与数据库连接串，一律从 `.env` 读取（配置项见仓库根 `README.md` 的「环境变量」一节）
+
+---
+
+## 10. 依赖与虚拟环境
+
+### 10.1 清单来源
+
+`backend/requirements.txt` 由 `pip freeze` 生成，**禁止手写、禁止手改版本号**。当前与实际环境零漂移。
+
+### 10.2 依赖分类（共 18 个）
+
+| 类别 | 包 | 说明 |
+|---|---|---|
+| 直接依赖（代码里有 import） | `Flask`、`Flask-RESTful`、`Flask-SQLAlchemy`、`Flask-JWT-Extended`、`SQLAlchemy`、`python-dotenv`、`Werkzeug` | 7 个，每个都有明确的 import 点 |
+| 运行期动态加载（搜不到 import） | `PyMySQL`、`PyJWT` | 2 个，**绝对不能删**，见 10.3 |
+| 传递依赖（别的包拉进来的） | `blinker`、`click`、`itsdangerous`、`Jinja2`、`MarkupSafe`（Flask 链）<br>`aniso8601`、`pytz`、`six`（Flask-RESTful 链）<br>`typing_extensions`（SQLAlchemy 链） | 9 个，不能单独卸载 |
+
+### 10.3 两个「搜不到 import 但绝对不能删」的包
+
+| 包 | 为什么必需 | 删掉的后果 |
+|---|---|---|
+| `PyMySQL` | `.env` 里 `mysql+pymysql://` 的 `pymysql` 部分是在告诉 SQLAlchemy 用哪个驱动，**驱动由 SQLAlchemy 在运行时按字符串动态导入**，代码中不存在 `import pymysql` | 启动或首次查库报 `ModuleNotFoundError: No module named 'pymysql'` |
+| `PyJWT` | `Flask-JWT-Extended` 内部用它签发 / 校验 token，代码中不存在 `import jwt`（`extensions.py` 里的 `jwt` 是 `JWTManager()` 实例的变量名，不是这个包） | 登录签发 token 时报错，接口返回 500 |
+
+**判断某个包能不能删的统一方法**：
+
+```bash
+.venv\Scripts\python -m pip show 包名
+# Required-by 非空 → 有别的包在依赖它，不要删
+# Required-by 为空 且 全项目搜不到 import → 才是真孤儿
+```
+
+### 10.4 已知的「僵尸」依赖（了解即可，不要动）
+
+`aniso8601`、`pytz`、`six` 只服务于 `Flask-RESTful`（日期解析 / 时区 / Python 2 兼容），当前项目一个功能都没用到，合计约 2.3MB。
+
+**但不能单独卸载**——`flask_restful` 导入时会连带导入它们，卸掉直接 `ImportError`。移除的唯一途径是整体替换 `Flask-RESTful`，省 2.3MB 远小于改造 `resources.py` / `routes.py` 的风险，**明确不做**。
+
+### 10.5 新增依赖的流程
+
+```bash
+# 1. 激活虚拟环境
+cd backend
+.venv\Scripts\activate
+
+# 2. 安装
+pip install 包名
+
+# 3. 代码里用上并跑通
+
+# 4. 更新清单，与代码同一次提交
+pip freeze > requirements.txt
+```
+
+### 10.6 从零重建环境
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate            # macOS / Linux: source .venv/bin/activate
+pip install -r requirements.txt
+# 再按根 README 配置 .env 才能启动
+```
+
+### 10.7 禁止事项
+
+- 禁止把 `.venv/` 提交进仓库（根 `.gitignore` 已覆盖）
+- 禁止手改 `requirements.txt` 的版本号；要升级就 `pip install --upgrade 包名` 后重新 `pip freeze`
+- 禁止因为「全项目搜不到 import」就卸载某包，先 `pip show` 看 `Required-by`

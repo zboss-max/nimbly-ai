@@ -18,6 +18,7 @@ function readUser(): UserInfo | null {
   }
 }
 
+/** 创建Store共享 */
 export const useUserStore = defineStore('user', () => {
   // ---------- 状态：会变的数据 ----------
   const token = ref<string>(getToken()) // 初始值 = 刷新页面时从 localStorage 恢复
@@ -29,7 +30,7 @@ export const useUserStore = defineStore('user', () => {
     () => user.value?.username || user.value?.phone || user.value?.email || '用户',
   )
 
-  // ---------- 动作：唯一能改状态的地方 ----------
+  // ---------- 动作：外部应通过这些方法修改用户状态 ----------
   async function signIn(payload: SignInPayload): Promise<void> {
     const result = await signInApi(payload) // 失败会 throw，交给调用方
     token.value = result.access_token
