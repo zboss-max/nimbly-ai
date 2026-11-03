@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { signIn as signInApi } from '@/modules/auth/api' // 起别名，避免和下面的 signIn 撞名
+import { signIn as signInApi } from '../api' // 起别名，避免和下面的 signIn 撞名
 import { clearToken, getToken, setToken } from '@/api/request'
 import type { SignInPayload, UserInfo } from '../types'
 
