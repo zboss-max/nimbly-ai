@@ -1,0 +1,58 @@
+# ============================================================
+# 项目根 .gitignore —— 一处统管 frontend/ 与 backend/
+# ============================================================
+
+# ---------- Python / Flask（backend）----------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+instance/
+
+# ---------- 环境变量 / 密钥 ----------
+.env
+.env.*
+!.env.example
+
+# ---------- IDE / 编辑器 ----------
+.idea/
+*.iml
+
+# ---------- 本地工具数据（不需入库）----------
+.workbuddy/
+
+# ---------- 系统文件 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 前端通用（完整继承原 frontend/.gitignore）----------
+node_modules/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+dist/
+dist-ssr/
+coverage/
+*.local
+*.tsbuildinfo
+.eslintcache
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+**/cypress/videos/
+**/cypress/screenshots/
+__screenshots__/
+*.timestamp-*-*.mjs
+
+# ---------- VS Code：只排内容，保留团队共享的 extensions.json ----------
+**/.vscode/*
+!**/.vscode/extensions.json
