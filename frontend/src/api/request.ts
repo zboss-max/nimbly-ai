@@ -1,7 +1,7 @@
-import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios'
-import { ElMessage } from 'element-plus'
+import axios, {type AxiosError, type AxiosInstance, type AxiosRequestConfig} from 'axios'
+import {ElMessage} from 'element-plus'
 import router from '@/router'
-import type { ApiResponse } from '@/types/api'
+import type {ApiResponse} from '@/types/api'
 
 const TOKEN_KEY = 'nimbly_token'
 
@@ -9,9 +9,11 @@ const TOKEN_KEY = 'nimbly_token'
 export function getToken(): string {
   return localStorage.getItem(TOKEN_KEY) ?? '' // ?? 是“左边为 null/undefined 才用右边”
 }
+
 export function setToken(token: string): void {
   localStorage.setItem(TOKEN_KEY, token)
 }
+
 export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY)
 }
@@ -43,7 +45,7 @@ http.interceptors.response.use(
     if (status === 401 && !isSignIn) {
       clearToken()
       ElMessage.error('登录已过期，请重新登录')
-      void router.replace({ name: 'signin' }) // void 表示“故意不处理这个 Promise”
+      void router.replace({name: 'signin'}) // void 表示“故意不处理这个 Promise”
     } else {
       ElMessage.error(message)
     }
@@ -67,9 +69,9 @@ async function request<T>(config: AxiosRequestConfig): Promise<T> {
 }
 
 export function get<T>(url: string, params?: Record<string, unknown>): Promise<T> {
-  return request<T>({ url, method: 'get', params })
+  return request<T>({url, method: 'get', params})
 }
 
 export function post<T>(url: string, data?: unknown): Promise<T> {
-  return request<T>({ url, method: 'post', data })
+  return request<T>({url, method: 'post', data})
 }

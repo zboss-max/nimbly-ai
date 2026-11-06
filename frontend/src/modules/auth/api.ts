@@ -1,8 +1,9 @@
-import { post } from '@/api/request'
-import type { SignInPayload, SignInResult, SignUpPayload, UserInfo } from './types'
+import {post} from '@/api/request'
+import type {SignInPayload, SignInResult, SignUpPayload, UserInfo} from './types'
 
 // auth 模块的接口路径前缀
 const AUTH_PREFIX = '/auth'
+
 /**
  * 登录
  * 成功返回 { access_token, user }；失败（401）由 request.ts 拦截器统一提示并 reject

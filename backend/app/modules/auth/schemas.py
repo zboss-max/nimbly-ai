@@ -14,7 +14,7 @@ class SignInSchema:
         if not isinstance(payload, dict):
             raise ValueError('请求体必须是 JSON 对象')
 
-        identifier = (payload.get('identifier')or
+        identifier = (payload.get('identifier') or
                       payload.get('username') or
                       ''
                       ).strip()

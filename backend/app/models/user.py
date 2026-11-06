@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.extensions import db
 from .base_model import BaseModel
 
-
 PHONE_PATTERN = re.compile(r'^1\d{10}$')
 EMAIL_PATTERN = re.compile(r'^[\w.+-]+@[\w-]+(\.[\w-]+)+$')
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z0-9]{8,16}$')
@@ -56,6 +55,5 @@ class User(BaseModel, db.Model):
             'phone': self.phone,
             'email': self.email,
             'create_time': self.create_time.strftime('%Y-%m-%d %H:%M:%S')
-                            if self.create_time else None,
+            if self.create_time else None,
         }
-

@@ -44,7 +44,7 @@ class Config:
 
     # JWT
     JWT_SECRET_KEY = SECRET_KEY  # 签名密钥，沿用原设计：与 SECRET_KEY 同值
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # token 有效期
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)  # token 有效期
 
 
 class DevelopmentConfig(Config):

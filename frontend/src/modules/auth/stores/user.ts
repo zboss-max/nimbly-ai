@@ -1,8 +1,8 @@
-import { computed, ref } from 'vue'
-import { defineStore } from 'pinia'
-import { signIn as signInApi } from '../api' // 起别名，避免和下面的 signIn 撞名
-import { clearToken, getToken, setToken } from '@/api/request'
-import type { SignInPayload, UserInfo } from '../types'
+import {computed, ref} from 'vue'
+import {defineStore} from 'pinia'
+import {signIn as signInApi} from '../api' // 起别名，避免和下面的 signIn 撞名
+import {clearToken, getToken, setToken} from '@/api/request'
+import type {SignInPayload, UserInfo} from '../types'
 
 const USER_KEY = 'nimbly_user'
 
@@ -47,5 +47,5 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 只有 return 出去的才能被组件用；readUser 是内部函数，不导出
-  return { token, user, isLoggedIn, displayName, signIn, signOut }
+  return {token, user, isLoggedIn, displayName, signIn, signOut}
 })
