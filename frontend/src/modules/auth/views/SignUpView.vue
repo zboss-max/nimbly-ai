@@ -5,6 +5,8 @@ import {useRouter} from 'vue-router'
 import type {SignUpPayload} from '../types'
 import {signUp} from "../api";
 
+import AuthLayout from "../layouts/AuthLayout.vue";
+
 const router = useRouter()
 
 // 表单数据
@@ -93,13 +95,7 @@ function validateFormat(): string {
 </script>
 
 <template>
-  <main class="auth-card">
-
-    <header>
-      <img class="brand" src="/favicon.ico" alt=""/>
-      <h1>加入 Nimbly</h1>
-    </header>
-
+  <AuthLayout title="加入 Nimbly">
     <form @submit.prevent="handleSubmit">
       <input v-model="signUpForm.username" placeholder="用户名"/>
       <input v-model="signUpForm.phone" placeholder="手机"/>
@@ -119,8 +115,7 @@ function validateFormat(): string {
         已有账号？<router-link :to="{ name: 'signin' }">登录</router-link>
       </span>
     </footer>
-
-  </main>
+  </AuthLayout>
 </template>
 
 <style scoped></style>

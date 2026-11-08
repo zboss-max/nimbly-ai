@@ -5,6 +5,8 @@ import {useRouter} from 'vue-router'
 import type {SignInPayload} from "../types";
 import {useUserStore} from '../stores/user'
 
+import AuthLayout from "../layouts/AuthLayout.vue";
+
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -49,12 +51,7 @@ async function handleSubmit(): Promise<void> {
 </script>
 
 <template>
-  <main class="auth-card">
-
-    <header>
-      <img class="brand" src="/favicon.ico" alt=""/>
-      <h1>登录 Nimbly</h1>
-    </header>
+  <AuthLayout title="登录 Nimbly">
 
     <!-- .prevent 阻止浏览器默认提交，否则点登录会整页刷新 -->
     <form @submit.prevent="handleSubmit">
@@ -75,7 +72,7 @@ async function handleSubmit(): Promise<void> {
       </span>
     </footer>
 
-  </main>
+  </AuthLayout>
 </template>
 
 <style scoped></style>

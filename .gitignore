@@ -20,9 +20,6 @@ instance/
 .idea/
 *.iml
 
-# ---------- 本地工具数据（不需入库）----------
-.workbuddy/
-
 # ---------- 系统文件 ----------
 .DS_Store
 Thumbs.db
