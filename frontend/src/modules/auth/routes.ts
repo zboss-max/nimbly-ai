@@ -4,13 +4,13 @@ import type {RouteRecordRaw} from 'vue-router'
 const authRoutes: RouteRecordRaw[] = [
   {
     path: '/signin',
-    name: 'signin',
+    name: 'auth-signin',
     component: () => import('./views/SignInView.vue'),
     meta: {title: '登录', requiresAuth: false},
   },
   {
     path: '/signup',
-    name: 'signup',
+    name: 'auth-signup',
     component: () => import('./views/SignUpView.vue'),
     meta: {title: '注册', requiresAuth: false},
   },

@@ -1,121 +1,193 @@
 <script setup lang="ts">
 import {reactive, ref} from 'vue'
 import {useRouter} from 'vue-router'
-
+import {ElMessage} from 'element-plus'
+import type {FormInstance, FormRules} from 'element-plus'
+import {signUp} from '../api'
 import type {SignUpPayload} from '../types'
-import {signUp} from "../api";
 
-import AuthLayout from "../layouts/AuthLayout.vue";
+// 表单里的值都由输入框提供，所以全部明确为 string
+interface SignUpForm {
+  username: string
+  phone: string
+  email: string
+  password: string
+  confirmPassword: string
+}
 
 const router = useRouter()
+const formRef = ref<FormInstance>()
+const submitting = ref(false)
 
-// 表单数据
-const signUpForm = reactive(
-  {
-    username: '',
-    phone: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  }
-)
+const form = reactive<SignUpForm>({
+  username: '',
+  phone: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+})
 
-// 页面内错误提示
-const errorMessage = ref('')
-
-// 提交中：防连点，也驱动按钮文案
-const loading = ref(false)
-
-// 提交处理
-async function handleSubmit(): Promise<void> {
-  // 重复点击拦截
-  if (loading.value) return
-  // 账号空值拦截
-  if (
-    !signUpForm.username.trim() &&
-    !signUpForm.phone.trim() &&
-    !signUpForm.email.trim()) {
-    errorMessage.value = '用户名 / 手机号 / 邮箱 至少填一个'
-    return
-  }
-  // 账号格式核对拦截
-  const formatError = validateFormat()
-  if (formatError) {
-    errorMessage.value = formatError
-    return
-  }
-  // 密码长度拦截
-  if (signUpForm.password.length < 6) {
-    errorMessage.value = '密码至少 6 位'
-    return
-  }
-  // 密码核对拦截
-  if (signUpForm.password !== signUpForm.confirmPassword) {
-    errorMessage.value = '两次输入的密码不一致'
-    return
-  }
-  errorMessage.value = '' // 页面内反馈区只放前端校验错误
-
-  loading.value = true // 进入请求前置位
-  //请求体
-  const payload: SignUpPayload = {
-    password: signUpForm.password
-  }
-  if (signUpForm.username.trim()) payload.username = signUpForm.username.trim()
-  if (signUpForm.phone.trim()) payload.phone = signUpForm.phone.trim()
-  if (signUpForm.email.trim()) payload.email = signUpForm.email.trim()
-  try {
-    await signUp(payload)
-    await router.replace({name: 'signin'})
-  } catch {
-    signUpForm.confirmPassword = '' // 清空确认框
-    // 409「已被占用」/ 400 格式错误已由 request.ts 统一弹窗
-  } finally {
-    loading.value = false // 成功/失败都复位
+function validateConfirmPassword(
+  _rule: unknown,
+  value: string,
+  callback: (error?: Error) => void,
+) {
+  if (!value) {
+    callback(new Error('请再次输入密码'))
+  } else if (value !== form.password) {
+    callback(new Error('两次输入的密码不一致'))
+  } else {
+    callback()
   }
 }
 
-// 账号格式核对
-function validateFormat(): string {
-  const username = signUpForm.username.trim()
-  const phone = signUpForm.phone.trim()
-  const email = signUpForm.email.trim()
+// 三种账号都不是单独必填，但填写后必须符合格式
+const rules: FormRules<SignUpForm> = {
+  username: [
+    {
+      pattern: /^[a-zA-Z0-9]{8,16}$/,
+      message: '用户名需为 8～16 位字母或数字',
+      trigger: 'blur',
+    },
+  ],
+  phone: [
+    {
+      pattern: /^1\d{10}$/,
+      message: '手机号格式不正确',
+      trigger: 'blur',
+    },
+  ],
+  email: [
+    {
+      pattern: /^[\w.+-]+@[\w-]+(\.[\w-]+)+$/,
+      message: '邮箱格式不正确',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 8, message: '密码至少 8 位', trigger: 'blur'},
+  ],
+  confirmPassword: [
+    {
+      required: true,
+      validator: validateConfirmPassword,
+      trigger: 'blur',
+    },
+  ],
+}
 
-  if (username && !/^[a-zA-Z0-9]{8,16}$/.test(username)) {
-    return '用户名需为 8-16 位字母或数字'
+async function handleSubmit() {
+  if (!formRef.value || submitting.value) return
+
+  const valid = await formRef.value.validate().catch(() => false)
+
+  // 检查三个账号字段是否至少填写了一个
+  const hasIdentifier = [
+    form.username,
+    form.phone,
+    form.email,
+  ].some((value) => value.trim() !== '')
+
+  if (!hasIdentifier) {
+    ElMessage.error('用户名、手机号、邮箱至少填写一个')
   }
-  if (phone && !/^1\d{10}$/.test(phone)) {
-    return '手机号格式不正确'
+
+  if (!valid || !hasIdentifier) return
+
+  submitting.value = true
+
+  try {
+    // password 必传，其余三个字段只在填写后加入请求体
+    const payload: SignUpPayload = {
+      password: form.password,
+    }
+
+    const username = form.username.trim()
+    const phone = form.phone.trim()
+    const email = form.email.trim()
+
+    if (username) payload.username = username
+    if (phone) payload.phone = phone
+    if (email) payload.email = email
+
+    await signUp(payload)
+
+    ElMessage.success('注册成功，请登录')
+    await router.replace({name: 'auth-signin'})
+  } catch {
+    // request.ts 已统一显示错误
+  } finally {
+    submitting.value = false
   }
-  if (email && !/^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test(email)) {
-    return '邮箱格式不正确'
-  }
-  return ''
 }
 </script>
 
 <template>
-  <AuthLayout title="加入 Nimbly">
-    <form @submit.prevent="handleSubmit">
-      <input v-model="signUpForm.username" placeholder="用户名"/>
-      <input v-model="signUpForm.phone" placeholder="手机"/>
-      <input v-model="signUpForm.email" placeholder="邮箱"/>
-      <input v-model="signUpForm.password" type="password" placeholder="密码"/>
-      <input v-model="signUpForm.confirmPassword" type="password" placeholder="确认密码"/>
-      <button type="submit" :disabled="loading">
-        {{ loading ? '提交中…' : '提交' }}
-      </button>
-    </form>
+  <main>
+    <h1>注册</h1>
+    <p>用户名、手机号、邮箱至少填写一个</p>
 
-    <!-- 反馈区：role="alert" 让屏幕阅读器读出错误 -->
-    <p class="feedback" role="alert">{{ errorMessage }}</p>
+    <el-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      @submit.prevent="handleSubmit"
+    >
+      <el-form-item label="用户名" prop="username">
+        <el-input
+          v-model="form.username"
+          placeholder="8～16 位字母或数字"
+        />
+      </el-form-item>
 
-    <footer>
-      <span>
-        已有账号？<router-link :to="{ name: 'signin' }">登录</router-link>
-      </span>
-    </footer>
-  </AuthLayout>
+      <el-form-item label="手机号" prop="phone">
+        <el-input
+          v-model="form.phone"
+          placeholder="选填，11 位手机号"
+        />
+      </el-form-item>
+
+      <el-form-item label="邮箱" prop="email">
+        <el-input
+          v-model="form.email"
+          placeholder="选填，例如 user@example.com"
+        />
+      </el-form-item>
+
+      <el-form-item label="密码" prop="password">
+        <el-input
+          v-model="form.password"
+          type="password"
+          show-password
+          placeholder="至少 8 位"
+          autocomplete="new-password"
+        />
+      </el-form-item>
+
+      <el-form-item label="确认密码" prop="confirmPassword">
+        <el-input
+          v-model="form.confirmPassword"
+          type="password"
+          show-password
+          placeholder="再次输入密码"
+          autocomplete="new-password"
+        />
+      </el-form-item>
+
+      <el-button
+        type="primary"
+        native-type="submit"
+        :loading="submitting"
+      >
+        注册
+      </el-button>
+    </el-form>
+
+    <router-link :to="{ name: 'auth-signin' }">
+      已有账号？去登录
+    </router-link>
+  </main>
 </template>
 
 <style scoped></style>

@@ -45,7 +45,7 @@ http.interceptors.response.use(
     if (status === 401 && !isSignIn) {
       clearToken()
       ElMessage.error('登录已过期，请重新登录')
-      void router.replace({name: 'signin'}) // void 表示“故意不处理这个 Promise”
+      void router.replace({name: 'auth-signin'}) // void 表示“故意不处理这个 Promise”
     } else {
       ElMessage.error(message)
     }

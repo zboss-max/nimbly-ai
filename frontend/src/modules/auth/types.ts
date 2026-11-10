@@ -24,7 +24,7 @@ export interface SignInResult {
   user: UserInfo
 }
 
-/** 注册入参，对应 SignUpSchema：三个标识至少填一个，密码至少 6 位 */
+/** 注册入参，对应 SignUpSchema：三个标识至少填一个，密码至少 8 位 */
 export interface SignUpPayload {
   username?: string // ? = 可以不传（前端没填就不发这个字段）
   phone?: string

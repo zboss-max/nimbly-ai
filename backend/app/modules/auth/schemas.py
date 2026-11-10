@@ -59,7 +59,7 @@ class SignUpSchema:
             raise ValueError('手机号格式不正确')
         if schema.email and not EMAIL_PATTERN.match(schema.email):
             raise ValueError('邮箱格式不正确')
-        if len(schema.password) < 6:
-            raise ValueError('密码至少 6 位')
+        if len(schema.password) < 8:
+            raise ValueError('密码至少 8 位')
 
         return schema
