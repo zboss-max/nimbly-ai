@@ -7,6 +7,8 @@ import type {SignInPayload} from '../types'
 import {useRouter} from 'vue-router'
 import {useUserStore} from '../stores/user'
 
+import AuthLayout from "../layouts/AuthLayout.vue";
+
 
 const form = reactive<SignInPayload>({
   identifier: '',
@@ -52,23 +54,23 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <main>
-    <h1>登录</h1>
-
+  <AuthLayout mode="signin">
     <el-form
       ref="formRef"
       :model="form"
       :rules="rules"
+      label-width="80px"
+      label-position="left"
       @submit.prevent="handleSubmit"
     >
-      <el-form-item label="账号" prop="identifier">
+      <el-form-item label="账 号" prop="identifier">
         <el-input
           v-model="form.identifier"
           placeholder="用户名 / 手机号 / 邮箱"
         />
       </el-form-item>
 
-      <el-form-item label="密码" prop="password">
+      <el-form-item label="密 码" prop="password">
         <el-input
           v-model="form.password"
           type="password"
@@ -76,15 +78,44 @@ async function handleSubmit() {
         />
       </el-form-item>
 
-      <el-button type="primary" native-type="submit" :loading="submitting">
+      <el-button
+        class="auth-submit"
+        type="primary"
+        native-type="submit"
+        :loading="submitting"
+      >
         登录
       </el-button>
     </el-form>
 
-    <router-link :to="{ name: 'auth-signup' }">
+    <router-link
+      class="auth-switch"
+      :to="{ name: 'auth-signup' }"
+    >
       没有账号？去注册
     </router-link>
-  </main>
+  </AuthLayout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.auth-submit {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 8px;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.auth-switch {
+  display: block;
+  width: fit-content;
+  margin: 20px 0 0 auto;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  transition: color var(--transition-fast);
+}
+
+.auth-switch:hover {
+  color: var(--color-primary-hover);
+}
+</style>

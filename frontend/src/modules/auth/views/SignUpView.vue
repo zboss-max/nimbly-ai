@@ -2,9 +2,14 @@
 import {reactive, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {ElMessage} from 'element-plus'
+
 import type {FormInstance, FormRules} from 'element-plus'
-import {signUp} from '../api'
 import type {SignUpPayload} from '../types'
+
+import {signUp} from '../api'
+
+import AuthLayout from '../layouts/AuthLayout.vue'
+
 
 // 表单里的值都由输入框提供，所以全部明确为 string
 interface SignUpForm {
@@ -124,38 +129,39 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <main>
-    <h1>注册</h1>
+  <AuthLayout mode="signup">
     <p>用户名、手机号、邮箱至少填写一个</p>
 
     <el-form
       ref="formRef"
       :model="form"
       :rules="rules"
+      label-width="80px"
+      label-position="left"
       @submit.prevent="handleSubmit"
     >
-      <el-form-item label="用户名" prop="username">
+      <el-form-item label="用 户 名" prop="username">
         <el-input
           v-model="form.username"
           placeholder="8～16 位字母或数字"
         />
       </el-form-item>
 
-      <el-form-item label="手机号" prop="phone">
+      <el-form-item label="手 机 号" prop="phone">
         <el-input
           v-model="form.phone"
           placeholder="选填，11 位手机号"
         />
       </el-form-item>
 
-      <el-form-item label="邮箱" prop="email">
+      <el-form-item label="邮 箱" prop="email">
         <el-input
           v-model="form.email"
           placeholder="选填，例如 user@example.com"
         />
       </el-form-item>
 
-      <el-form-item label="密码" prop="password">
+      <el-form-item label="密 码" prop="password">
         <el-input
           v-model="form.password"
           type="password"
@@ -176,6 +182,7 @@ async function handleSubmit() {
       </el-form-item>
 
       <el-button
+        class="auth-submit"
         type="primary"
         native-type="submit"
         :loading="submitting"
@@ -184,10 +191,35 @@ async function handleSubmit() {
       </el-button>
     </el-form>
 
-    <router-link :to="{ name: 'auth-signin' }">
+    <router-link
+      class="auth-switch"
+      :to="{ name: 'auth-signin' }"
+    >
       已有账号？去登录
     </router-link>
-  </main>
+  </AuthLayout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.auth-submit {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 8px;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.auth-switch {
+  display: block;
+  width: fit-content;
+  margin: 20px 0 0 auto;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  transition: color var(--transition-fast);
+}
+
+.auth-switch:hover {
+  color: var(--color-primary-hover);
+}
+</style>
+

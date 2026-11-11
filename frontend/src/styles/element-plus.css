@@ -1,0 +1,125 @@
+:root {
+  /* Element Plus 主色 */
+  --el-color-primary: var(--color-primary);
+  --el-color-primary-dark-2: var(--color-primary-hover);
+
+  /* 暗色背景下，主色的浅色阶实际用于深色交互状态 */
+  --el-color-primary-light-3: #0c4a6e;
+  --el-color-primary-light-5: #164e63;
+  --el-color-primary-light-7: #1e293b;
+  --el-color-primary-light-8: #172033;
+  --el-color-primary-light-9: rgba(56, 189, 248, 0.1);
+
+  /* 背景 */
+  --el-bg-color: #0b1120;
+  --el-bg-color-overlay: #111a2c;
+  --el-fill-color-blank: rgba(8, 13, 23, 0.72);
+
+  /* 文字 */
+  --el-text-color-primary: var(--color-text);
+  --el-text-color-regular: var(--color-text-secondary);
+  --el-text-color-secondary: var(--color-text-secondary);
+  --el-text-color-placeholder: var(--color-muted);
+  --el-text-color-disabled: var(--color-muted);
+
+  /* 边框 */
+  --el-border-color: var(--color-border);
+  --el-border-color-hover: var(--color-border-active);
+  --el-border-radius-base: var(--radius-sm);
+
+  /* 状态 */
+  --el-color-danger: var(--color-danger);
+  --el-color-success: var(--color-success);
+}
+
+/* ---------- 输入框 ---------- */
+
+.el-input__wrapper {
+  background: rgba(8, 13, 23, 0.68);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 1px var(--color-border) inset;
+  transition: background var(--transition-fast),
+  box-shadow var(--transition-fast);
+}
+
+.el-input__wrapper:hover {
+  background: rgba(13, 20, 34, 0.88);
+  box-shadow: 0 0 0 1px var(--color-border-active) inset;
+}
+
+.el-input__wrapper.is-focus {
+  background: rgba(13, 20, 34, 0.96);
+  box-shadow: 0 0 0 1px var(--color-primary) inset,
+  0 0 0 3px rgba(56, 189, 248, 0.1);
+}
+
+.el-input__inner {
+  color: var(--color-text);
+}
+
+.el-input__inner::placeholder {
+  color: var(--color-muted);
+}
+
+.el-input__prefix,
+.el-input__suffix {
+  color: var(--color-muted);
+}
+
+/* 校验失败的输入框 */
+.el-form-item.is-error .el-input__wrapper {
+  box-shadow: 0 0 0 1px var(--color-danger) inset;
+}
+
+/* ---------- 表单 ---------- */
+
+.el-form-item__label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.el-form-item__error {
+  color: var(--color-danger);
+}
+
+/* ---------- 主按钮 ---------- */
+
+.el-button--primary:not(.is-link):not(.is-text) {
+  border: 0;
+  color: #06111c;
+  font-weight: 600;
+  background: var(--gradient-primary);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.16);
+  transition: filter var(--transition-fast),
+  box-shadow var(--transition-fast),
+  transform var(--transition-fast);
+}
+
+.el-button--primary:not(.is-link):not(.is-text):hover {
+  filter: brightness(1.1);
+  box-shadow: 0 10px 32px rgba(56, 189, 248, 0.26);
+  transform: translateY(-1px);
+}
+
+.el-button--primary:not(.is-link):not(.is-text):active {
+  transform: translateY(0);
+}
+
+.el-button--primary.is-disabled,
+.el-button--primary.is-loading {
+  opacity: 0.68;
+  transform: none;
+}
+
+/* ---------- 消息提示 ---------- */
+
+.el-message {
+  border-color: var(--color-border-active);
+  background: rgba(13, 20, 34, 0.94);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+}
+
+.el-message .el-message__content {
+  color: var(--color-text);
+}
