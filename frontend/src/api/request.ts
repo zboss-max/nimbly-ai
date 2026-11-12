@@ -36,14 +36,19 @@ http.interceptors.request.use((config) => {
 // 响应拦截器：只处理“失败的 HTTP 状态”（axios 对 4xx/5xx 会走这里）
 http.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<ApiResponse<unknown>>) => {
+  async (error: AxiosError<ApiResponse<unknown>>) => {
     const status = error.response?.status
     const message = error.response?.data?.msg ?? '网络异常，请稍后重试'
     // 关键：登录接口密码错也返回 401，此时不能当“登录过期”处理，否则会把用户刷回登录页
     const isSignIn = error.config?.url?.includes('/auth/signin') ?? false
 
     if (status === 401 && !isSignIn) {
-      clearToken()
+      // 动态引入，避免 request.ts 和 user Store 相互静态引用
+      const { useUserStore } = await import('@/modules/auth/stores/user')
+      const userStore = useUserStore()
+      // 一次清理 Pinia 和 LocalStorage 中的登录状态
+      userStore.signOut()
+
       ElMessage.error('登录已过期，请重新登录')
       void router.replace({name: 'auth-signin'}) // void 表示“故意不处理这个 Promise”
     } else {

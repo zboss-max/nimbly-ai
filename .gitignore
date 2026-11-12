@@ -53,3 +53,6 @@ __screenshots__/
 # ---------- VS Code：只排内容，保留团队共享的 extensions.json ----------
 **/.vscode/*
 !**/.vscode/extensions.json
+
+# ---------- 本地开发文档 ----------
+docs/
